@@ -5,7 +5,7 @@ import { Post, Tag } from "@/types";
 // loadPostsByTags calling the PostgreSQL function ////////
 ///////////////////////////////////////////////////////////
 
-export async function loadPostsByTags(selectedTags: string[]): Promise<Post[]> {
+export async function loadPostsByTags(selectedTags: string[] | string): Promise<Post[]> {
   if (!selectedTags || selectedTags.length === 0) {
     return [];
   }
