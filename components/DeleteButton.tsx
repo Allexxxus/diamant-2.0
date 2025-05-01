@@ -2,7 +2,7 @@
 import { deletePost } from "@/utils/actions";
 import { Trash2Icon } from "lucide-react";
 
-export default function DeleteButton({ postId }: { postId: number }) {
+export default function DeleteButton({ postId }: { postId: string }) {
   async function handleDelete() {
     await deletePost(postId);
   }
