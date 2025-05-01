@@ -3,22 +3,19 @@ import Tags from '@/components/Tags';
 import Posts from '@/components/Posts';
 import { PageProps, Post, Tag } from '@/types';
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ selectedTags: string[] }> }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ selectedTags: string }> }) {
 
   const params = await searchParams
-
   const tags: Tag[] = await loadAllTags();
   let posts: Post[] = [];
-
+  
   let selectedTags: string[] = []
   if (params.selectedTags === undefined) {
-    console.log('selected tags: ' + selectedTags)
     selectedTags = []
   } else if (typeof params.selectedTags === 'string') {
-    console.log('selected tags: ' + selectedTags)
-    selectedTags = [params.selectedTags]
+    console.log('selected tags from url bar: ' + params.selectedTags)
+    selectedTags = params.selectedTags.split(',')
   } else if (Array.isArray(params.selectedTags)) {
-    console.log('selected tags: ' + selectedTags)
     selectedTags = params.selectedTags
   }
 
