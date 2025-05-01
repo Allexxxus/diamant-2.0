@@ -20,7 +20,12 @@ export default function Tags({ tags }: TagsProps) {
   };
 
   const handleFilter = async () => {
-    router.push(`/?selectedTags=${selectedTags.join(',')}`);
+    if(selectedTags.length > 0) {
+        router.push(`/?selectedTags=${selectedTags.join(',')}`);
+    }
+    else {
+        router.push('/');
+    }
   };
 
   return (
