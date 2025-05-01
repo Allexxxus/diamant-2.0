@@ -8,15 +8,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
   const params = await searchParams
   const tags: Tag[] = await loadAllTags();
   let posts: Post[] = [];
-  
+
   let selectedTags: string[] = []
   if (params.selectedTags === undefined) {
     selectedTags = []
-  } else if (typeof params.selectedTags === 'string') {
-    console.log('selected tags from url bar: ' + params.selectedTags)
+  } else {
     selectedTags = params.selectedTags.split(',')
-  } else if (Array.isArray(params.selectedTags)) {
-    selectedTags = params.selectedTags
   }
 
   if (selectedTags.length > 0) {
