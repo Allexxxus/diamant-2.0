@@ -11,9 +11,7 @@ export interface Tag {
   }
   
   export interface PageProps {
-    searchParams: {
       selectedTags?: string;
-    };
   }
   
   export interface PostsProps {

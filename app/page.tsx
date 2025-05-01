@@ -3,7 +3,7 @@ import Tags from '@/components/Tags';
 import Posts from '@/components/Posts';
 import { PageProps, Post, Tag } from '@/types';
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ selectedTags: string }> }) {
+export default async function Home({ searchParams }: { searchParams: Promise<PageProps> }) {
 
   const params = await searchParams
   const tags: Tag[] = await loadAllTags();
