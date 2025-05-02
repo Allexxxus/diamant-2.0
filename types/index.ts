@@ -4,10 +4,17 @@ export interface Tag {
     name: string;
   }
   
-  export interface Post {
-    id: string;
+  interface BasePost {
     title: string;
     tags: Tag[];
+  }
+  
+  export interface Post extends BasePost {
+    id: string; // Only Post has an id
+  }
+  
+  export interface NewPost extends BasePost {
+    // NewPost doesn't have an id
   }
   
   export interface PageProps {
