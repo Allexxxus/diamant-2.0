@@ -1,11 +1,13 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
-import { Post, Tag } from "@/types";
+import { NewPost, Post, Tag } from "@/types";
 
 // loadPostsByTags calling the PostgreSQL function ////////
 ///////////////////////////////////////////////////////////
 
-export async function loadPostsByTags(selectedTags: string[] | string): Promise<Post[]> {
+export async function loadPostsByTags(
+  selectedTags: string[] | string
+): Promise<Post[]> {
   if (!selectedTags || selectedTags.length === 0) {
     return [];
   }
@@ -66,8 +68,79 @@ export async function loadAllPosts(): Promise<Post[]> {
 // add new post ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-export async function addPost(newPost: Post) {
-  console.log(newPost) // don't fodify this function for now only this line here for the purpose of testing
+export async function createPost(newPost: NewPost) {
+  console.log("Received newPost:", newPost);
+
+  // Validate input
+  if (!newPost || typeof newPost !== 'object') {
+    throw new Error("Invalid input: newPost must be an object");
+  }
+
+  const { title, tags = [] } = newPost; // Default to empty array if tags not provided
+
+  const supabase = await createClient();
+
+  // 1. Create the post
+  const { data: postData, error: postError } = await supabase
+    .from("posts")
+    .insert([{ title }])
+    .select("id")
+    .single();
+
+  if (postError) {
+    console.error("Error creating post:", postError);
+    throw new Error(`Failed to create post: ${postError.message}`);
+  }
+
+  if (!postData?.id) {
+    console.error("Post created but ID not returned.");
+    throw new Error("Post ID not found after creation.");
+  }
+
+  const postId = postData.id;
+  console.log("Post created successfully with ID:", postId);
+
+  // 2. Handle tags if they exist
+  if (tags.length > 0) {
+    const postTagsData = tags.map((tagId) => ({
+      post_id: postId,
+      tag_id: tagId,
+    }));
+
+    console.log("Data to insert into post_tags:", postTagsData);
+
+    const { error: postTagError } = await supabase
+      .from("post_tags")
+      .insert(postTagsData);
+
+    if (postTagError) {
+      console.error("Error creating post tag relationships:", postTagError);
+
+      // Clean up by deleting the post
+      console.log(`Attempting to delete post ${postId} due to tag insertion failure.`);
+      const { error: deleteError } = await supabase
+        .from("posts")
+        .delete()
+        .eq("id", postId);
+
+      if (deleteError) {
+        console.error("Failed to delete post after tag insertion error:", deleteError);
+        throw new Error(
+          `Failed to create post tags (${postTagError.message}). ` +
+          `Cleanup also failed (${deleteError.message}).`
+        );
+      }
+
+      console.log(`Successfully deleted post ${postId} after tag insertion failure.`);
+      throw new Error(
+        `Failed to create post tag relationships: ${postTagError.message}. ` +
+        "The post has been deleted."
+      );
+    }
+    console.log("Post and tag relationships created successfully for post ID:", postId);
+  } else {
+    console.log("No tags provided, skipping post_tags insertion for post ID:", postId);
+  }
 }
 
 // delete a post //////////////////////////////////////////
