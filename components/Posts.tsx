@@ -2,16 +2,20 @@
 import React from 'react'
 import DeleteButton from './DeleteButton'
 import { Post } from '@/types';
+import { useRouter } from 'next/navigation';
 
 interface PostsProps {
     posts: Post[];
 }
 
 export default function Posts({ posts }: PostsProps) {
+    const router = useRouter();
+
     return (
         <div className='mt-2 mx-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2'>
             <button
                 className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors self-start"
+                onClick={() => router.push('/addPost')}
             >
                 Add Post
             </button>
