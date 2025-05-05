@@ -20,7 +20,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
     }
 
     return (
-        <div className="p-2 bg-gray-100 rounded-lg">
+        <div className="p-2 bg-gray-100 dark:bg-black rounded-lg fixed top-0 z-10">
             <div className="flex flex-row items-center space-x-2">
                 <Heading1Icon
                     onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
