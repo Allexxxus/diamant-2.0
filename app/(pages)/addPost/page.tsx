@@ -59,9 +59,9 @@ export default function Page() {
     <div className="max-w-4xl mx-auto mt-1 p-6 bg-white dark:bg-zinc-950 rounded-md shadow-md">
       <h1 className="text-xl font-bold mb-6">Add New Post</h1>
       
-      {/* <RichTextEditor /> */}
+      <RichTextEditor />
       
-      <form onSubmit={handleSubmit}>
+      {/* <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="title" className="block text-sm font-medium mb-2">
             Post Title
@@ -116,7 +116,7 @@ export default function Page() {
             Cancel
           </button>
         </div>
-      </form>
+      </form> */}
     </div>
   )
 }

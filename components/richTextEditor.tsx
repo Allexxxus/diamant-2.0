@@ -85,13 +85,9 @@ const RichTextEditor = () => {
             TextAlign.configure({
                 types: ['heading', 'paragraph'],
             }),
-            Highlight.configure({
-                HTMLAttributes: {
-                    class: 'my-custom-class',
-                },
-            })
+            Highlight.configure({})
         ],
-        content: '<h1>MOBY-DICK;</h1><h1>or, THE WHALE.</h1><h2><mark class="my-custom-class">By Herman Melville</mark></h2><h3><strong>CHAPTER 1. Loomings.</strong></h3><p style="text-align: center">Call me Ishmael. Some years ago—<s>never mind how long precisely</s>—having little or no money in my purse, and <em>nothing particular to interest me on shore</em>, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen and regulating the circulation.</p><p style="text-align: justify">Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to sea as soon as I can.</p>',
+        content: '<h1 style="text-align: center">MOBY-DICK;</h1><h1 style="text-align: center">or,</h1><h1 style="text-align: center">THE WHALE.</h1><h2 style="text-align: center"><mark class="my-custom-class">By Herman Melville</mark></h2><h3><strong>CHAPTER 1. Loomings.</strong></h3><p style="text-align: left">Call me Ishmael. Some years ago—<s>never mind how long precisely</s>—having little or no money in my purse, and <em>nothing particular to interest me on shore</em>, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen and regulating the circulation.</p><p style="text-align: justify">Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to sea as soon as I can.</p>',
         onUpdate: ({ editor }) => {
             setContent(editor.getHTML())
         },
@@ -105,7 +101,7 @@ const RichTextEditor = () => {
     return (
         <div className="p-4">
             <MenuBar editor={editor} />
-            <EditorContent editor={editor} className="min-h-[200px] border rounded-lg p-4 mt-2" />
+            <EditorContent editor={editor} className="min-h-[200px] p-4 mt-2" />
             <button 
                 onClick={handleLogContent} 
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
