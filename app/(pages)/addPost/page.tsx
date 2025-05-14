@@ -1,122 +1,282 @@
-//I need to think about adding new tags
+//Page.tsx
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createPost } from '@/utils/actions'
 import { NewPost } from '@/types'
 import RichTextEditor from '@/components/richTextEditor'
 
-// Mock tags data - replace with your actual tag selection logic
-const MOCK_TAGS = [
-  { id: '1', name: 'Technology' },
-  { id: '2', name: 'Programming' },
-  { id: '3', name: 'Design' },
-]
-
 export default function Page() {
   const router = useRouter()
-  const [formData, setFormData] = React.useState<NewPost>({
-    title: '',
-    tags: []
-  })
+  const [editorContent, setEditorContent] = useState('')
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, title: e.target.value }))
+  function getTitle(htmlString: string): string {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlString;
+    return tempDiv.firstElementChild?.textContent || '';
   }
 
-  const handleTagToggle = (tagId: string) => {
-    setFormData(prev => {
-      const tagIndex = prev.tags.indexOf(tagId)
-      let newTags = [...prev.tags]
-      
-      if (tagIndex >= 0) {
-        // Remove tag if already selected
-        newTags.splice(tagIndex, 1)
-      } else {
-        // Add tag if not selected
-        newTags.push(tagId)
-      }
-      
-      return { ...prev, tags: newTags }
-    })
+  const handleContentChange = (content: string) => {
+    setEditorContent(content)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.title.trim()) return
-    
-    try {
-      await createPost(formData)
-      router.push('/')
-    } catch (error) {
-      console.error('Failed to create post:', error)
-      // You might want to add error state and display it to the user
+  const handleLogContent = async () => {
+    const newPost: NewPost = {
+      content: editorContent,
+      tags: [],
+      title: getTitle(editorContent)
     }
+    console.log(newPost)
+    await createPost(newPost)
   }
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault()
+  //   if (!newPost.title.trim()) return
+
+  //   try {
+  //     await createPost(newPost)
+  //     router.push('/')
+  //   } catch (error) {
+  //     console.error('Failed to create post:', error)
+  //   }
+  // }
 
   return (
-    <div className="max-w-4xl mx-auto mt-1 p-6 bg-white dark:bg-zinc-950 rounded-md shadow-md">
-      <h1 className="text-xl font-bold mb-6">Add New Post</h1>
-      
-      <RichTextEditor />
-      
-      {/* <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="title" className="block text-sm font-medium mb-2">
-            Post Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={formData.title}
-            onChange={handleTitleChange}
-            className="w-full px-3 py-2 border rounded-md dark:bg-zinc-900 dark:border-zinc-700"
-            placeholder="Enter post title"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">
-            Tags
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {MOCK_TAGS.map(tag => (
-              <button
-                key={tag.id}
-                type="button"
-                onClick={() => handleTagToggle(tag.id)}
-                className={`px-3 py-1 text-sm rounded-full border ${
-                  formData.tags.includes(tag.id)
-                    ? 'bg-blue-500 text-white border-blue-500'
-                    : 'bg-gray-100 dark:bg-zinc-800 border-gray-300 dark:border-zinc-600'
-                }`}
-              >
-                {tag.name}
-              </button>
-            ))}
-          </div>
-        </div>
-        
-        <div className="flex gap-2">
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
-            disabled={!formData.title.trim()}
-          >
-            Submit
-          </button>
-          
-          <button
-            type="button"
-            onClick={() => router.push('/')}
-            className="px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-black dark:text-white rounded-md transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
-      </form> */}
+    <div className="max-w-4xl mx-auto p-4">
+      <RichTextEditor
+        content={editorContent}
+        onContentChange={handleContentChange}
+      />
+      <div className="mt-4">
+        <button
+          onClick={handleLogContent}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Log Content
+        </button>
+      </div>
     </div>
   )
 }
+// //////////////////////////////////////////////////////////////////////3
+// //////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////
+
+// //Page.tsx
+// "use client"
+
+// import React, { useState } from 'react'
+// import { useRouter } from 'next/navigation'
+// import { createPost } from '@/utils/actions'
+// import { NewPost } from '@/types'
+// import RichTextEditor from '@/components/richTextEditor'
+
+// export default function Page() {
+//   const router = useRouter()
+//   const [tags, setTags] = useState()
+//   const [content, setContent] = useState()
+
+//   const [newPost, setNewPost] = React.useState<NewPost>({
+//     title: '',
+//     tags: [],
+//     content: ''
+//   })
+
+//   function getTitle(htmlString: string) {
+//     const tempDiv = document.createElement('div');
+//     tempDiv.innerHTML = htmlString;
+
+//     const firstElement = tempDiv.firstElementChild;
+
+//     if (!firstElement) {
+//       return null;
+//     }
+//     return firstElement.textContent;
+//   }
+
+//   const handleContentChange = (content: string) => {
+//     setNewPost(prev => ({
+//       ...prev,
+//       content,
+//       title: getTitle(content) || prev.title // Update title from content, fallback to previous title
+//     }))
+//   }
+
+//   const handleLogContent = () => {
+//     console.log(newPost)
+//   }
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault()
+//     if (!newPost.title.trim()) return
+
+//     try {
+//       await createPost(newPost)
+//       router.push('/')
+//     } catch (error) {
+//       console.error('Failed to create post:', error)
+//     }
+//   }
+
+//   return (
+//     <div className="max-w-4xl mx-auto p-4">
+//       <RichTextEditor
+//         content={newPost.content}
+//         onContentChange={handleContentChange}
+//       />
+//       <div className="mt-4">
+//         <button
+//           onClick={handleLogContent}
+//           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+//         >
+//           Log Content
+//         </button>
+//       </div>
+//     </div>
+//   )
+// }
+
+//////////////////////////////////////////////////////////////////////2
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+// //Page.tsx
+// "use client"
+
+// import React from 'react'
+// import { useRouter } from 'next/navigation'
+// import { createPost } from '@/utils/actions'
+// import { NewPost } from '@/types'
+// import RichTextEditor from '@/components/richTextEditor'
+
+// export default function Page() {
+//   const router = useRouter()
+//   const [newPost, setNewPost] = React.useState<NewPost>({
+//     title: '',
+//     tags: [],
+//     content: ''
+//   })
+
+//   function getTitle(htmlString: string) {
+//     const tempDiv = document.createElement('div');
+//     tempDiv.innerHTML = htmlString;
+
+//     const firstElement = tempDiv.firstElementChild;
+
+//     if (!firstElement) {
+//       return null;
+//     }
+//     return firstElement.textContent;
+//   }
+
+//   const handleContentChange = (content: string) => {
+//     setNewPost(prev => ({
+//       ...prev,
+//       content,
+//       title: getTitle(content) || prev.title // Update title from content, fallback to previous title
+//     }))
+//   }
+
+//   const handleLogContent = () => {
+//     console.log(newPost)
+//   }
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault()
+//     if (!newPost.title.trim()) return
+
+//     try {
+//       await createPost(newPost)
+//       router.push('/')
+//     } catch (error) {
+//       console.error('Failed to create post:', error)
+//     }
+//   }
+
+//   return (
+//     <div className="max-w-4xl mx-auto p-4">
+//       <RichTextEditor
+//         content={newPost.content}
+//         onContentChange={handleContentChange}
+//       />
+//       <div className="mt-4">
+//         <button
+//           onClick={handleLogContent}
+//           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+//         >
+//           Log Content
+//         </button>
+//       </div>
+//     </div>
+//   )
+// }
+
+// //////////////////////////////////////////////////////////////////////1
+// //////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////
+
+// //I need to think about adding new tags
+// "use client"
+
+// import React from 'react'
+// import { useRouter } from 'next/navigation'
+// import { createPost } from '@/utils/actions'
+// import { NewPost } from '@/types'
+// import RichTextEditor from '@/components/richTextEditor'
+
+// // Mock tags data - replace with your actual tag selection logic
+// const MOCK_TAGS = [
+//   { id: '1', name: 'Technology' },
+//   { id: '2', name: 'Programming' },
+//   { id: '3', name: 'Design' },
+// ]
+
+// export default function Page() {
+//   const router = useRouter()
+//   const [formData, setFormData] = React.useState<NewPost>({
+//     title: '',
+//     tags: []
+//   })
+
+//   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setFormData(prev => ({ ...prev, title: e.target.value }))
+//   }
+
+//   const handleTagToggle = (tagId: string) => {
+//     setFormData(prev => {
+//       const tagIndex = prev.tags.indexOf(tagId)
+//       let newTags = [...prev.tags]
+
+//       if (tagIndex >= 0) {
+//         // Remove tag if already selected
+//         newTags.splice(tagIndex, 1)
+//       } else {
+//         // Add tag if not selected
+//         newTags.push(tagId)
+//       }
+
+//       return { ...prev, tags: newTags }
+//     })
+//   }
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault()
+//     if (!formData.title.trim()) return
+
+//     try {
+//       await createPost(formData)
+//       router.push('/')
+//     } catch (error) {
+//       console.error('Failed to create post:', error)
+//       // You might want to add error state and display it to the user
+//     }
+//   }
+
+//   return (
+//     <div>
+//       <RichTextEditor />
+//     </div>
+//   )
+// }

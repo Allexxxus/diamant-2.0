@@ -13,6 +13,7 @@ export interface Post {
 export interface NewPost {
   title: string;
   tags: string[];
+  content: string
 }
 
 export interface PageProps {
